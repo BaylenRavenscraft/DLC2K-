@@ -1,0 +1,260 @@
+
+# Load the necessary libraries if not already loaded
+if (!require("readr")) {
+  install.packages("readr")
+  library(readr)
+}
+
+if (!require("graphics")) {
+  install.packages("graphics")
+  library(graphics)
+}
+
+if (!require("pracma")) {
+  install.packages("pracma")
+  library(pracma)
+}
+
+if (!require("ggplot2")) {
+  install.packages("ggplot2")
+  library(ggplot2)
+}
+
+# Create a directory folder
+dir.create("C:/Users/14632/OneDrive - Indiana University/Desktop/DeepLabCut/x-correlation-re-re-analysis/analysis-attempt-8-1/Distance Measurements")
+
+# List of file paths
+file_paths <- c(
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 1-1 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 1-2 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 1-3 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 1-4 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 2-1 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 2-2 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 2-3 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 2-4 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 3-1 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 3-2 SCI 8W 4cmDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 3-3 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 4-1 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 4-1a SCI 8W 10cmDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 4-2 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 4-3 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 4-4 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 5-1 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 5-2 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 5-3 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 5-4 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 6-1 SCI 8W 10cmDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 6-1 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 6-1a SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 6-2 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 6-4 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 7-1 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 7-2 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 7-3 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 7-4 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 8-1 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 8-2 SCI 8W 6cmDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 8-4 SCI 8W 8cmDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 9-1 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 9-2 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 9-3 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv",
+  "D:/Backups/8wpi behavior data/TS/DLC-7-boopsniffers-csv-etc-files/drive-download-20230217T130835Z-001/8-29-22 9-4 SCI 8WDLC_resnet50_Attempt-7-boopsniffertotoesiesDec5shuffle1_250000.csv")
+
+
+# Loop over the files
+for (i in seq_along(file_paths)) {
+  
+  # Read the CSV file into R and assign it to a data frame called 'df'
+  df <- readr::read_csv(file_paths[i], skip = 3)
+  
+  # Convert the columns of interest to numeric vectors
+  Frame <- as.numeric(df[[1]])
+  RHDd4_x <- as.numeric(df[[2]])
+  RHDd4_y <- as.numeric(df[[3]])
+  RHdd3_x <- as.numeric(df[[5]])
+  RHdd3_y <- as.numeric(df[[6]])
+  RHmd2_x <- as.numeric(df[[8]])
+  RHmd2_y <- as.numeric(df[[9]])
+  RHMd1_x <- as.numeric(df[[11]])
+  RHMd1_y <- as.numeric(df[[12]])
+  RHTh0_x <- as.numeric(df[[14]])
+  RHTh0_y <- as.numeric(df[[15]])
+  RHMt_x <- as.numeric(df[[17]])
+  RHMt_y <- as.numeric(df[[18]])
+  RHAnk_x <- as.numeric(df[[20]])
+  RHAnk_y <- as.numeric(df[[21]])
+  RHKnee_x <- as.numeric(df[[23]])
+  RHKnee_y <- as.numeric(df[[24]])
+  RF_x <- as.numeric(df[[26]])
+  RF_y <- as.numeric(df[[27]])
+  TB_x <- as.numeric(df[[29]])
+  TB_y <- as.numeric(df[[30]])
+  MB_x <- as.numeric(df[[32]])
+  MB_y <- as.numeric(df[[33]])
+  Nose_x <- as.numeric(df[[35]])
+  Nose_y <- as.numeric(df[[36]])
+  LF_x <- as.numeric(df[[38]])
+  LF_y <- as.numeric(df[[39]])
+  LHKnee_x <- as.numeric(df[[41]])
+  LHKnee_y <- as.numeric(df[[42]])
+  LHAnk_x <- as.numeric(df[[44]])
+  LHAnk_y <- as.numeric(df[[45]])
+  LHMt_x <- as.numeric(df[[47]])
+  LHMt_y <- as.numeric(df[[48]])
+  LHTh0_x <- as.numeric(df[[50]])
+  LHTh0_y <- as.numeric(df[[51]])
+  LHMd1_x <- as.numeric(df[[53]])
+  LHMd1_y <- as.numeric(df[[54]])
+  LHmd2_x <- as.numeric(df[[56]])
+  LHmd2_y <- as.numeric(df[[57]])
+  LHdd3_x <- as.numeric(df[[59]])
+  LHdd3_y <- as.numeric(df[[60]])
+  LHDd4_x <- as.numeric(df[[62]])
+  LHDd4_y <- as.numeric(df[[63]])
+  
+  
+  
+  # Calculate Distaces
+  # Calculate the Euclidean distance between Distaldigits and MidBody
+  dist_RHDd4_MB <- sqrt((RHDd4_x - MB_x)^2 + (RHDd4_y - MB_y)^2)
+  dist_LHDd4_MB <- sqrt((LHDd4_x - MB_x)^2 + (LHDd4_y - MB_y)^2)
+  # Calculate the Euclidean distance between Distaldigits and Tailbase
+  dist_RHDd4_TB <- sqrt((RHDd4_x - TB_x)^2 + (RHDd4_y - TB_y)^2)
+  dist_LHDd4_TB <- sqrt((LHDd4_x - TB_x)^2 + (LHDd4_y - TB_y)^2)
+  # Calculate the Euclidean distance between Distaldigits and Thumbs
+  dist_RHDd4_RHTh0 <- sqrt((RHDd4_x - RHTh0_x)^2 + (RHDd4_y - RHTh0_y)^2)
+  dist_LHDd4_LHTh0 <- sqrt((LHDd4_x - LHTh0_x)^2 + (LHDd4_y - LHTh0_y)^2)
+  # Calculate the Euclidean distance between HindlimbAnkles
+  dist_RHAnk_LHAnk <- sqrt((RHAnk_x - LHAnk_x)^2 + (RHAnk_y - LHAnk_y)^2)
+  # Calculate the Euclidean distance between HindlimbMetaTarsals and Frontpaws
+  dist_RHMt_RF <- sqrt((RHMt_x - RF_x)^2 + (RHMt_y - RF_y)^2)
+  dist_LHMt_LF <- sqrt((LHMt_x - LF_x)^2 + (LHMt_y - LF_y)^2)
+  
+  # Calculate the average distance
+  avg_distance_RHDd4_MB <- mean(dist_RHDd4_MB)
+  avg_distance_LHDd4_MB <- mean(dist_LHDd4_MB)
+  avg_distance_RHDd4_TB <- mean(dist_RHDd4_TB)
+  avg_distance_LHDd4_TB <- mean(dist_LHDd4_TB)
+  avg_distance_RHDd4_RHTh0 <- mean(dist_RHDd4_RHTh0)
+  avg_distance_LHDd4_LHTh0 <- mean(dist_LHDd4_LHTh0)
+  avg_distance_RHAnk_LHAnk <- mean(dist_RHAnk_LHAnk)
+  avg_distance_RHMt_RF <- mean(dist_RHMt_RF)
+  avg_distance_LHMt_LF <- mean(dist_LHMt_LF)
+  
+  # Print the average distances
+  cat("Average distance between RHDistaldigit4 and MidBody:", avg_distance_RHDd4_MB, "\n")
+  cat("Average distance between LHDistaldigit4 and MidBody:", avg_distance_LHDd4_MB, "\n")
+  cat("Average distance between RHDistaldigit4 and Tailbase:", avg_distance_RHDd4_TB, "\n")
+  cat("Average distance between LHDistaldigit4 and Tailbase:", avg_distance_LHDd4_TB, "\n")
+  cat("Average distance between RHDistaldigit4 and RHThumb0:", avg_distance_RHDd4_RHTh0, "\n")
+  cat("Average distance between LHDistaldigit4 and LHThumb0:", avg_distance_LHDd4_LHTh0, "\n")
+  cat("Average distance between RHAnkle and LHAnkle:", avg_distance_RHAnk_LHAnk, "\n")
+  cat("Average distance between RHMetatarsals and RFrontpaw:", avg_distance_RHMt_RF, "\n")
+  cat("Average distance between LHMetatarsals and LFrontpaw:", avg_distance_LHMt_LF, "\n")
+  
+  # Calculate the standard deviations
+  sd_distance_RHDd4_MB <- sd(dist_RHDd4_MB)
+  sd_distance_LHDd4_MB <- sd(dist_LHDd4_MB)
+  sd_distance_RHDd4_TB <- sd(dist_RHDd4_TB)
+  sd_distance_LHDd4_TB <- sd(dist_LHDd4_TB)
+  sd_distance_RHDd4_RHTh0 <- sd(dist_RHDd4_RHTh0)
+  sd_distance_LHDd4_LHTh0 <- sd(dist_LHDd4_LHTh0)
+  sd_distance_RHAnk_LHAnk <- sd(dist_RHAnk_LHAnk)
+  sd_distance_RHMt_RF <- sd(dist_RHMt_RF)
+  sd_distance_LHMt_LF <- sd(dist_LHMt_LF)
+  
+  # Print the standard deviations
+  cat("Standard Deviation of distances between RHDistaldigit4 and MidBody:", sd_distance_RHDd4_MB, "\n")
+  cat("Standard Deviation of distances between LHDistaldigit4 and MidBody:", sd_distance_LHDd4_MB, "\n")
+  cat("Standard Deviation of distances between RHDistaldigit4 and Tailbase:", sd_distance_RHDd4_TB, "\n")
+  cat("Standard Deviation of distances between LHDistaldigit4 and Tailbase:", sd_distance_LHDd4_TB, "\n")
+  cat("Standard Deviation of distances between RHDistaldigit4 and RHThumb0:", sd_distance_RHDd4_RHTh0, "\n")
+  cat("Standard Deviation of distances between LHDistaldigit4 and LHThumb0:", sd_distance_LHDd4_LHTh0, "\n")
+  cat("Standard Deviation of distances between RHAnkle and LHAnkle:", sd_distance_RHAnk_LHAnk, "\n")
+  cat("Standard Deviation of distances between RHMetatarsals and RFrontpaw:", sd_distance_RHMt_RF, "\n")
+  cat("Standard Deviation of distances between LHMetatarsals and LFrontpaw:", sd_distance_LHMt_LF, "\n")
+  
+  
+  # Create a data frame for plotting
+  dist_data <- data.frame(
+    BodyPart = c(
+      "RHDd4_MB", 
+      "LHDd4_MB",
+      "RHDd4_TB", 
+      "LHDd4_TB",
+      "RHDd4_RHTh0", 
+      "LHDd4_LHTh0",
+      "RHAnk_LHAnk", 
+      "RHMt_RF", 
+      "LHMt_LF"
+    ),
+    Distance = c(
+      avg_distance_RHDd4_MB, 
+      avg_distance_LHDd4_MB,
+      avg_distance_RHDd4_TB, 
+      avg_distance_LHDd4_TB,
+      avg_distance_RHDd4_RHTh0, 
+      avg_distance_LHDd4_LHTh0,
+      avg_distance_RHAnk_LHAnk, 
+      avg_distance_RHMt_RF, 
+      avg_distance_LHMt_LF
+    )
+  )
+  # Create a data frame for average distances and standard deviations
+  result_data <- data.frame(
+    BodyPart = c(
+      "RHDd4_MB", 
+      "LHDd4_MB",
+      "RHDd4_TB", 
+      "LHDd4_TB",
+      "RHDd4_RHTh0", 
+      "LHDd4_LHTh0",
+      "RHAnk_LHAnk", 
+      "RHMt_RF", 
+      "LHMt_LF"
+    ),
+    AverageDistance = c(
+      avg_distance_RHDd4_MB, 
+      avg_distance_LHDd4_MB,
+      avg_distance_RHDd4_TB, 
+      avg_distance_LHDd4_TB,
+      avg_distance_RHDd4_RHTh0, 
+      avg_distance_LHDd4_LHTh0,
+      avg_distance_RHAnk_LHAnk, 
+      avg_distance_RHMt_RF, 
+      avg_distance_LHMt_LF
+    ),
+    StandardDeviation = c(
+      sd_distance_RHDd4_MB, 
+      sd_distance_LHDd4_MB,
+      sd_distance_RHDd4_TB, 
+      sd_distance_LHDd4_TB,
+      sd_distance_RHDd4_RHTh0, 
+      sd_distance_LHDd4_LHTh0,
+      sd_distance_RHAnk_LHAnk, 
+      sd_distance_RHMt_RF, 
+      sd_distance_LHMt_LF
+    )
+  )
+  
+  # Generate the CSV file
+  csv_file <- paste0("C:/Users/14632/OneDrive - Indiana University/Desktop/DeepLabCut/x-correlation-re-re-analysis/analysis-attempt-8-1/Distance Measurements/try1-5/d-1-5_video-", i, ".csv")
+  write.csv(result_data, file = csv_file, row.names = FALSE)
+  
+  plot <- ggplot(dist_data, aes(x = BodyPart, y = Distance)) +
+    geom_bar(stat = "identity", fill = "steelblue") +
+    geom_text(aes(label = round(Distance, 2)), vjust = -0.5) +  # Add this line
+    xlab("Body Parts") +
+    ylab("Average Distance") +
+    ggtitle("Average Distances") +
+    theme_bw() +
+    theme(axis.text.x = element_text(size = 8))  # Adjust the text size
+  
+  # Save the plot as a PDF file
+  pdf_file <- paste0("C:/Users/14632/OneDrive - Indiana University/Desktop/DeepLabCut/x-correlation-re-re-analysis/analysis-attempt-8-1/Distance Measurements/try1-5/d-1-5_video-", i, ".pdf")
+  pdf(file = pdf_file)
+  print(plot)
+  dev.off()
+}
